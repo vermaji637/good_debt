@@ -146,14 +146,29 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ✅ CORS Settings
 # Allow your frontend hosts
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:5173",
+#     "http://127.0.0.1:5173",
+# ]
+
+# CORS_ALLOW_ALL_ORIGINS = False  
+# CORS_ALLOW_CREDENTIALS = True
+
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "good-debt.onrender.com",     # ✅ Your backend (Render)
+]
+
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "https://good-debt-iota.vercel.app",   # ✅ Your frontend (Vercel)
 ]
 
 CORS_ALLOW_ALL_ORIGINS = False  
 CORS_ALLOW_CREDENTIALS = True
-
 
 # ✅ Other default settings
 LANGUAGE_CODE = 'en-us'
