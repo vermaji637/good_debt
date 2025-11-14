@@ -3,8 +3,8 @@ from datetime import timedelta, date
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Enquiry, BankPincode
-from .serializers import EnquirySerializer, BankPincodeSerializer
+from App.models import Enquiry, BankPincode
+from App.serializers import EnquirySerializer, BankPincodeSerializer
 
 
 @api_view(['GET', 'POST'])

@@ -18,7 +18,7 @@ def get_connection():
 
 
 essql_create = (
-    "CREATE TABLE IF NOT EXISTS public.bank_pincode ("
+    "CREATE TABLE IF NOT EXISTS public.App_bankpincode ("
     "id BIGINT PRIMARY KEY,"
     "bank_name TEXT,"
     "pincode TEXT,"
@@ -31,14 +31,14 @@ essql_create = (
 
 
 copy_sql = (
-    "COPY public.bank_pincode (id, bank_name, pincode, city, state, bank_url, loan_types) "
+    "COPY public.App_bankpincode (id, bank_name, pincode, city, state, bank_url, loan_types) "
     "FROM STDIN WITH (FORMAT CSV, HEADER TRUE)"
 )
 
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python load_bank_pincode.py <path-to-csv>")
+        print("Usage: python load_App_bankpincode.py <path-to-csv>")
         sys.exit(2)
     csv_path = Path(sys.argv[1])
     if not csv_path.exists() or not csv_path.is_file():
@@ -55,9 +55,9 @@ def main():
                 cur.copy_expert(sql=copy_sql, file=f)
         with conn:
             with conn.cursor() as cur:
-                cur.execute("SELECT COUNT(*) FROM public.bank_pincode")
+                cur.execute("SELECT COUNT(*) FROM public.App_bankpincode")
                 count = cur.fetchone()[0]
-        print(f"Loaded into public.bank_pincode. Total rows now: {count}")
+        print(f"Loaded into public.App_bankpincode. Total rows now: {count}")
     finally:
         conn.close()
 
