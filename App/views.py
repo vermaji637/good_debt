@@ -11,9 +11,12 @@ from App.serializers import EnquirySerializer, BankPincodeSerializer
 def enquiry_list_create(request):
     # ✅ GET — return all banks
     if request.method == 'GET':
-        bank_data = BankPincode.objects.all()
-        serializer = BankPincodeSerializer(bank_data, many=True)
-        return Response(serializer.data)
+        bank_data = Enquiry.objects.all()
+        serializer = EnquirySerializer(bank_data, many=True)
+        return Response({
+            "count": bank_data.count(),   # 👈 Total enquiry count
+            "data": serializer.data       # 👈 All enquiries
+        })
 
     # ✅ POST — create a new enquiry
     elif request.method == 'POST':

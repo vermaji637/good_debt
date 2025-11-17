@@ -30,6 +30,14 @@ class Enquiry(models.Model):
     current_pincode = models.CharField(max_length=10)
     loan_for = models.CharField(max_length=100)
     net_income = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    departmentName = models.CharField(max_length=100, blank=True, null=True)
+    designationName = models.CharField(max_length=100, blank=True, null=True)
+    companyName = models.CharField(max_length=150, blank=True, null=True)
+    
+    designation = models.CharField(max_length=100, blank=True, null=True)
+    departmentName = models.CharField(max_length=100, blank=True, null=True)
+    companyName = models.CharField(max_length=150, blank=True, null=True)
+
     created_at = models.DateTimeField(auto_now_add=True)  # for checking recent entries
 
     def __str__(self):
