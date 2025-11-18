@@ -120,20 +120,33 @@ def bank_interest_list_create(request):
     # ------------------------- GET -------------------------
     if request.method == 'GET':
 
-        enquiry_id = request.GET.get('enquiry_id', None)
+        enquiry_id = request.GET.get('enquiry_id')
 
-        # If enquiry_id is provided → filter by that enquiry
-        if enquiry_id:
-            data = BankInterest.objects.filter(enquiry_id=enquiry_id)
-        else:
-            # Otherwise return all
-            data = BankInterest.objects.all()
+        if not enquiry_id:
+            return Response({"message": "enquiry_id is required"}, status=400)
 
-        serializer = BankInterestSerializer(data, many=True)
-        return Response({
-            "count": data.count(),
+    # Get all interests for this enquiry
+        interest_entries = BankInterest.objects.filter(enquiry_id=enquiry_id)
+
+        if not interest_entries.exists():
+         return Response({
+            "count": 0,
             "enquiry_id": enquiry_id,
-            "data": serializer.data
+            "data": []
+        })
+
+        bank_list = []
+
+    # Loop through each interest entry
+        for interest in interest_entries:
+            bank = BankPincode.objects.filter(id=interest.bank_id).first()
+            if bank:
+             bank_list.append(BankPincodeSerializer(bank).data)
+
+        return Response({
+        "count": len(bank_list),
+        "enquiry_id": enquiry_id,
+        "data": bank_list
         })
 
     # ------------------------- POST -------------------------
