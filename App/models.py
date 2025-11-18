@@ -42,3 +42,22 @@ class Enquiry(models.Model):
 
     def __str__(self):
         return f"{self.full_name} - {self.loan_for}"
+
+
+
+class BankInterest(models.Model):
+    PROCESS_BY_CHOICES = (
+        ("good_debt", "Good Debt"),
+        ("bank", "Bank"),
+    )
+
+    bank_id = models.IntegerField()
+    enquiry_id = models.IntegerField()
+    process_by = models.CharField(max_length=20, choices=PROCESS_BY_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "bank_interest"   # <-- table name
+
+    def __str__(self):
+        return f"BankInterest {self.id}"

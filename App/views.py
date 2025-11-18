@@ -107,3 +107,48 @@ def enquiry_list_create(request):
             },
             status=status.HTTP_201_CREATED
         )
+
+
+
+from App.models import BankInterest
+from App.serializers import BankInterestSerializer
+
+
+@api_view(['GET', 'POST'])
+def bank_interest_list_create(request):
+
+    # ------------------------- GET -------------------------
+    if request.method == 'GET':
+
+        enquiry_id = request.GET.get('enquiry_id', None)
+
+        # If enquiry_id is provided → filter by that enquiry
+        if enquiry_id:
+            data = BankInterest.objects.filter(enquiry_id=enquiry_id)
+        else:
+            # Otherwise return all
+            data = BankInterest.objects.all()
+
+        serializer = BankInterestSerializer(data, many=True)
+        return Response({
+            "count": data.count(),
+            "enquiry_id": enquiry_id,
+            "data": serializer.data
+        })
+
+    # ------------------------- POST -------------------------
+    elif request.method == 'POST':
+        serializer = BankInterestSerializer(data=request.data)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+
+        return Response(
+            {
+                "message": "Bank interest entry created successfully",
+                "data": serializer.data
+            },
+            status=status.HTTP_201_CREATED
+        )
