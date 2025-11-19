@@ -6,6 +6,10 @@ from rest_framework import status
 from App.models import Enquiry, BankPincode
 from App.serializers import EnquirySerializer, BankPincodeSerializer
 
+from App.models import BankInterest
+from App.serializers import BankInterestSerializer
+
+
 
 @api_view(['GET', 'POST'])
 def enquiry_list_create(request):
@@ -110,10 +114,6 @@ def enquiry_list_create(request):
 
 
 
-from App.models import BankInterest
-from App.serializers import BankInterestSerializer
-
-
 @api_view(['GET', 'POST'])
 def bank_interest_list_create(request):
 
@@ -125,28 +125,30 @@ def bank_interest_list_create(request):
         if not enquiry_id:
             return Response({"message": "enquiry_id is required"}, status=400)
 
-    # Get all interests for this enquiry
         interest_entries = BankInterest.objects.filter(enquiry_id=enquiry_id)
 
         if not interest_entries.exists():
-         return Response({
-            "count": 0,
-            "enquiry_id": enquiry_id,
-            "data": []
-        })
+            return Response({
+                "count": 0,
+                "enquiry_id": enquiry_id,
+                "data": []
+            })
 
         bank_list = []
 
-    # Loop through each interest entry
         for interest in interest_entries:
+
             bank = BankPincode.objects.filter(id=interest.bank_id).first()
+
             if bank:
-             bank_list.append(BankPincodeSerializer(bank).data)
+                bank_data = BankPincodeSerializer(bank).data
+                bank_data["process_by"] = interest.process_by
+                bank_list.append(bank_data)
 
         return Response({
-        "count": len(bank_list),
-        "enquiry_id": enquiry_id,
-        "data": bank_list
+            "count": len(bank_list),
+            "enquiry_id": enquiry_id,
+            "data": bank_list
         })
 
     # ------------------------- POST -------------------------
