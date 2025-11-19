@@ -6,6 +6,22 @@ class EnquirySerializer(serializers.ModelSerializer):
         model = Enquiry
         fields = '__all__'
 
+    # PAN validation
+    def validate_pan_number(self, value):
+        # Check length = 10
+        if len(value) != 10:
+            raise serializers.ValidationError("PAN number must be exactly 10 characters.")
+
+        # Check uppercase
+        if not value.isupper():
+            raise serializers.ValidationError("PAN number must be in UPPERCASE.")
+
+        return value
+
+    # Convert PAN to uppercase before saving
+    def create(self, validated_data):
+        validated_data['pan_number'] = validated_data['pan_number'].upper()
+        return super().create(validated_data)
 
 class BankPincodeSerializer(serializers.ModelSerializer):
     class Meta:

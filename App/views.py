@@ -153,17 +153,35 @@ def bank_interest_list_create(request):
 
     # ------------------------- POST -------------------------
     elif request.method == 'POST':
-        serializer = BankInterestSerializer(data=request.data)
+     enquiry_id = request.data.get("enquiry_id")
+     bank_id = request.data.get("bank_id")
+     process_by = request.data.get("process_by")
 
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # Check if same combination already exists
+    duplicate = BankInterest.objects.filter(
+        enquiry_id=enquiry_id,
+        bank_id=bank_id,
+        process_by=process_by
+    ).exists()
 
-        serializer.save()
-
+    if duplicate:
         return Response(
-            {
-                "message": "Bank interest entry created successfully",
-                "data": serializer.data
-            },
-            status=status.HTTP_201_CREATED
+            {"message": "You have already visited this bank"},
+            status=status.HTTP_400_BAD_REQUEST
         )
+
+    # Normal validation
+    serializer = BankInterestSerializer(data=request.data)
+
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    serializer.save()
+
+    return Response(
+        {
+            "message": "Bank interest entry created successfully",
+            "data": serializer.data
+        },
+        status=status.HTTP_201_CREATED
+    )

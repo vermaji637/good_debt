@@ -40,6 +40,13 @@ class Enquiry(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)  # for checking recent entries
 
+
+    def save(self, *args, **kwargs):
+        # Convert PAN number to uppercase before saving
+        if self.pan_number:
+            self.pan_number = self.pan_number.upper()
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.full_name} - {self.loan_for}"
 
