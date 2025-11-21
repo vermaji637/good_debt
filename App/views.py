@@ -10,18 +10,24 @@ from App.models import BankInterest
 from App.serializers import BankInterestSerializer
 
 
-
+from rest_framework.pagination import PageNumberPagination
 @api_view(['GET', 'POST'])
 def enquiry_list_create(request):
     # ✅ GET — return all banks
+    # ===============================================
+    #                  GET (with pagination)
+    # ===============================================
     if request.method == 'GET':
-        bank_data = Enquiry.objects.all()
-        serializer = EnquirySerializer(bank_data, many=True)
-        return Response({
-            "count": bank_data.count(),   # 👈 Total enquiry count
-            "data": serializer.data       # 👈 All enquiries
-        })
+        queryset = Enquiry.objects.all().order_by('-id')
 
+        paginator = PageNumberPagination()
+        paginator.page_size = 20   # can remove if already in settings
+
+        page = paginator.paginate_queryset(queryset, request)
+        serializer = EnquirySerializer(page, many=True)
+
+        return paginator.get_paginated_response(serializer.data)
+    
     # ✅ POST — create a new enquiry
     elif request.method == 'POST':
         serializer = EnquirySerializer(data=request.data)
