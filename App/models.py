@@ -26,15 +26,14 @@ class Enquiry(models.Model):
     pan_number = models.CharField(max_length=10)
     date_of_birth = models.DateField()
     employee_type = models.CharField(max_length=50, blank=True, null=True)
+    business_type = models.CharField(max_length=100, blank=True, null=True)
     current_city = models.CharField(max_length=100)
     current_pincode = models.CharField(max_length=10)
     loan_for = models.CharField(max_length=100)
     net_income = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     departmentName = models.CharField(max_length=100, blank=True, null=True)
     designationName = models.CharField(max_length=100, blank=True, null=True)
-    companyName = models.CharField(max_length=150, blank=True, null=True)
     
-    designation = models.CharField(max_length=100, blank=True, null=True)
     departmentName = models.CharField(max_length=100, blank=True, null=True)
     companyName = models.CharField(max_length=150, blank=True, null=True)
 
